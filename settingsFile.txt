@@ -1,0 +1,183 @@
+Updatecheck<|||>3<|||>1
+UpdatecheckLastrun<|||>1<|||>2020-09-14 17:17:57
+ColWidths_connform.ListSessions<|||>1<|||>163,50,50,50,50,50,53
+ColsVisible_connform.ListSessions<|||>1<|||>0
+ColPositions_connform.ListSessions<|||>1<|||>0,1,2,3,4,5,6
+ColSort_connform.ListSessions<|||>1<|||>0,1
+CoolBand0Index<|||>3<|||>0
+CoolBand0Break<|||>3<|||>1
+CoolBand0Width<|||>3<|||>928
+CoolBand1Index<|||>3<|||>1
+CoolBand1Break<|||>3<|||>1
+CoolBand1Width<|||>3<|||>928
+MainWinLeft<|||>3<|||>1941
+ColWidths_MainForm.ListDatabases<|||>1<|||>208,80,72,145,70,104,72,88,50,50,120
+ColsVisible_MainForm.ListDatabases<|||>1<|||>0,1,2,3,4,5,6,7,8,9,10
+ColPositions_MainForm.ListDatabases<|||>1<|||>0,1,2,3,4,5,6,7,8,9,10
+ColSort_MainForm.ListDatabases<|||>1<|||>0,0
+ColWidths_MainForm.ListVariables<|||>1<|||>160,200,428
+ColsVisible_MainForm.ListVariables<|||>1<|||>0,1,2
+ColPositions_MainForm.ListVariables<|||>1<|||>0,1,2
+ColSort_MainForm.ListVariables<|||>1<|||>0,0
+ColWidths_MainForm.ListStatus<|||>1<|||>160,428,100,100
+ColsVisible_MainForm.ListStatus<|||>1<|||>0,1,2,3
+ColPositions_MainForm.ListStatus<|||>1<|||>0,1,2,3
+ColSort_MainForm.ListStatus<|||>1<|||>0,0
+ColWidths_MainForm.ListProcesses<|||>1<|||>70,80,80,80,80,50,50,711
+ColsVisible_MainForm.ListProcesses<|||>1<|||>0,1,2,3,4,5,6,7
+ColPositions_MainForm.ListProcesses<|||>1<|||>0,1,2,3,4,5,6,7
+ColSort_MainForm.ListProcesses<|||>1<|||>0,1
+ColWidths_MainForm.ListCommandStats<|||>1<|||>120,100,100,100,368
+ColsVisible_MainForm.ListCommandStats<|||>1<|||>0,1,2,3,4
+ColPositions_MainForm.ListCommandStats<|||>1<|||>0,1,2,3,4
+ColSort_MainForm.ListCommandStats<|||>1<|||>1,1
+ColWidths_MainForm.ListTables<|||>1<|||>458,70,70,120,120,70,100,50,70,70,70,70,70,90,120,70,70,70,50
+ColsVisible_MainForm.ListTables<|||>1<|||>0,1,2,3,4,5,6,18
+ColPositions_MainForm.ListTables<|||>1<|||>0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+ColSort_MainForm.ListTables<|||>1<|||>0,0
+Theme<|||>1<|||>Windows
+SQL Attr Comment Foreground<|||>3<|||>8421504
+SQL Attr ConditionalComment Foreground<|||>3<|||>8421504
+SQL Attr DataType Foreground<|||>3<|||>128
+SQL Attr DelimitedIdentifier Foreground<|||>3<|||>32896
+SQL Attr Function Foreground<|||>3<|||>8388608
+SQL Attr Identifier Foreground<|||>3<|||>32896
+SQL Attr Key Foreground<|||>3<|||>16711680
+SQL Attr Number Foreground<|||>3<|||>8388736
+SQL Attr String Foreground<|||>3<|||>32768
+SQL Attr Symbol Foreground<|||>3<|||>16711680
+SQL Attr TableName Foreground<|||>3<|||>16711935
+SQL Attr Variable Foreground<|||>3<|||>8388736
+FieldColor_Binary<|||>3<|||>8388736
+FieldColor_Datetime<|||>3<|||>128
+FieldColor_Numeric<|||>3<|||>16711680
+FieldColor_Other<|||>3<|||>32896
+FieldColor_Real<|||>3<|||>16711752
+FieldColor_Spatial<|||>3<|||>8421376
+FieldColor_Text<|||>3<|||>32768
+LastSessions<|||>1<|||>MySqlLocal
+LastActiveSession<|||>1<|||>MySqlLocal
+SessionManager_WindowLeft<|||>3<|||>626
+SessionManager_WindowTop<|||>3<|||>169
+TableFilter<|||>1<|||>Sen<{{{><}}}>Delivery<{{{><}}}>Delivey<{{{><}}}>Statis<{{{><}}}>Statistic<{{{><}}}>Stati<{{{><}}}>Subscri<{{{><}}}>se<{{{><}}}>Sys<{{{><}}}>
+ColWidths_frmTableEditor.listColumns<|||>1<|||>22,100,156,90,60,65,50,119,130,140,100,100
+ColsVisible_frmTableEditor.listColumns<|||>1<|||>0,1,2,3,4,5,6,7,8,9,10,11
+ColPositions_frmTableEditor.listColumns<|||>1<|||>0,1,2,3,4,5,6,7,8,9,10,11
+ColSort_frmTableEditor.listColumns<|||>1<|||>-1,0
+ColWidths_frmTableEditor.treeIndexes<|||>1<|||>423,100,80
+ColsVisible_frmTableEditor.treeIndexes<|||>1<|||>0,1,2
+ColPositions_frmTableEditor.treeIndexes<|||>1<|||>0,1,2
+ColSort_frmTableEditor.treeIndexes<|||>1<|||>-1,0
+ColWidths_frmTableEditor.listForeignKeys<|||>1<|||>189,80,100,80,80,80
+ColsVisible_frmTableEditor.listForeignKeys<|||>1<|||>0,1,2,3,4,5
+ColPositions_frmTableEditor.listForeignKeys<|||>1<|||>0,1,2,3,4,5
+ColSort_frmTableEditor.listForeignKeys<|||>1<|||>-1,0
+dbtreewidth<|||>3<|||>347
+sqloutheight<|||>3<|||>364
+MainWinOnMonitor<|||>3<|||>1
+MainWinTop<|||>3<|||>68
+MainWinWidth<|||>3<|||>1438
+MainWinHeight<|||>3<|||>882
+ColWidths_frmRoutineEditor.listParameters<|||>1<|||>10,439,90,70
+ColsVisible_frmRoutineEditor.listParameters<|||>1<|||>0,1,2,3
+ColPositions_frmRoutineEditor.listParameters<|||>1<|||>0,1,2,3
+ColSort_frmRoutineEditor.listParameters<|||>1<|||>-1,0
+FontSize<|||>3<|||>17
+TabWidth<|||>3<|||>4
+SQL Attr Comment Background<|||>3<|||>536870911
+SQL Attr Comment Style<|||>3<|||>2
+SQL Attr ConditionalComment Background<|||>3<|||>536870911
+SQL Attr ConditionalComment Style<|||>3<|||>2
+SQL Attr ConsoleOutput Foreground<|||>3<|||>536870911
+SQL Attr ConsoleOutput Background<|||>3<|||>536870911
+SQL Attr ConsoleOutput Style<|||>3<|||>5
+SQL Attr DataType Background<|||>3<|||>536870911
+SQL Attr DataType Style<|||>3<|||>1
+SQL Attr DefaultPackages Foreground<|||>3<|||>536870911
+SQL Attr DefaultPackages Background<|||>3<|||>536870911
+SQL Attr DefaultPackages Style<|||>3<|||>1
+SQL Attr DelimitedIdentifier Background<|||>3<|||>536870911
+SQL Attr DelimitedIdentifier Style<|||>3<|||>0
+SQL Attr Exception Foreground<|||>3<|||>536870911
+SQL Attr Exception Background<|||>3<|||>536870911
+SQL Attr Exception Style<|||>3<|||>2
+SQL Attr Function Background<|||>3<|||>536870911
+SQL Attr Function Style<|||>3<|||>1
+SQL Attr Identifier Background<|||>3<|||>536870911
+SQL Attr Identifier Style<|||>3<|||>0
+SQL Attr Key Background<|||>3<|||>536870911
+SQL Attr Key Style<|||>3<|||>1
+SQL Attr Number Background<|||>3<|||>536870911
+SQL Attr Number Style<|||>3<|||>0
+SQL Attr PLSQL-ReservedWord Foreground<|||>3<|||>536870911
+SQL Attr PLSQL-ReservedWord Background<|||>3<|||>536870911
+SQL Attr PLSQL-ReservedWord Style<|||>3<|||>1
+SQL Attr ProcName Foreground<|||>3<|||>536870911
+SQL Attr ProcName Background<|||>3<|||>536870911
+SQL Attr ProcName Style<|||>3<|||>0
+SQL Attr Space Foreground<|||>3<|||>536870911
+SQL Attr Space Background<|||>3<|||>536870911
+SQL Attr Space Style<|||>3<|||>0
+SQL Attr SQLPlus-Command Foreground<|||>3<|||>536870911
+SQL Attr SQLPlus-Command Background<|||>3<|||>536870911
+SQL Attr SQLPlus-Command Style<|||>3<|||>1
+SQL Attr String Background<|||>3<|||>536870911
+SQL Attr String Style<|||>3<|||>0
+SQL Attr Symbol Background<|||>3<|||>536870911
+SQL Attr Symbol Style<|||>3<|||>0
+SQL Attr TableName Background<|||>3<|||>536870911
+SQL Attr TableName Style<|||>3<|||>0
+SQL Attr Variable Background<|||>3<|||>536870911
+SQL Attr Variable Style<|||>3<|||>0
+FieldEditor_Set<|||>3<|||>1
+Shortcut1_actExecuteQuery<|||>3<|||>116
+Shortcut1_actExecuteSelection<|||>3<|||>116
+Shortcut1_actExecuteCurrentQuery<|||>3<|||>116
+SessionManager_WindowWidth<|||>3<|||>864
+SessionManager_WindowHeight<|||>3<|||>556
+querymemoheight<|||>3<|||>279
+SQLFile0<|||>1<|||>C:\Users\dyu.sorokin\AppData\Roaming\HeidiSQL\Backups\query-tab-2019-10-23_11-56-30-378.sql
+DataFontSize<|||>3<|||>12
+FileDialogEncoding_MainForm<|||>3<|||>0
+MySQL_Binaries<|||>1<|||>C:\Program Files\MySQL\MySQL Server 8.0\bin
+CustomSnippetsDirectory<|||>1<|||>F:\aaa\myProg\Projects\MySqlTest\snipens
+AutoUppercase<|||>3<|||>0
+PreferencesWindowWidth<|||>3<|||>1045
+PreferencesWindowHeight<|||>3<|||>721
+Servers\MySqlLocal\SessionCreated<|||>1<|||>2020-09-14 17:18:26
+Servers\MySqlLocal\Host<|||>1<|||>localhost
+Servers\MySqlLocal\WindowsAuth<|||>3<|||>0
+Servers\MySqlLocal\CleartextPluginEnabled<|||>3<|||>0
+Servers\MySqlLocal\User<|||>1<|||>redballtoy
+Servers\MySqlLocal\Password<|||>1<|||>737070751
+Servers\MySqlLocal\LoginPrompt<|||>3<|||>0
+Servers\MySqlLocal\Port<|||>1<|||>3306
+Servers\MySqlLocal\NetType<|||>3<|||>0
+Servers\MySqlLocal\Compressed<|||>3<|||>0
+Servers\MySqlLocal\LocalTimeZone<|||>3<|||>0
+Servers\MySqlLocal\QueryTimeout<|||>3<|||>30
+Servers\MySqlLocal\KeepAlive<|||>3<|||>20
+Servers\MySqlLocal\FullTableStatus<|||>3<|||>1
+Servers\MySqlLocal\Databases<|||>1<|||>example
+Servers\MySqlLocal\Comment<|||>1<|||>
+Servers\MySqlLocal\StartupScriptFilename<|||>1<|||>
+Servers\MySqlLocal\TreeBackground<|||>3<|||>536870911
+Servers\MySqlLocal\SSHtunnelHost<|||>1<|||>
+Servers\MySqlLocal\SSHtunnelHostPort<|||>3<|||>22
+Servers\MySqlLocal\SSHtunnelUser<|||>1<|||>
+Servers\MySqlLocal\SSHtunnelPassword<|||>1<|||>5
+Servers\MySqlLocal\SSHtunnelTimeout<|||>3<|||>4
+Servers\MySqlLocal\SSHtunnelPrivateKey<|||>1<|||>
+Servers\MySqlLocal\SSHtunnelPort<|||>3<|||>3307
+Servers\MySqlLocal\SSL_Active<|||>3<|||>0
+Servers\MySqlLocal\SSL_Key<|||>1<|||>
+Servers\MySqlLocal\SSL_Cert<|||>1<|||>
+Servers\MySqlLocal\SSL_CA<|||>1<|||>
+Servers\MySqlLocal\SSL_Cipher<|||>1<|||>
+Servers\MySqlLocal\ServerVersionFull<|||>1<|||>8.0.21 - MySQL Community Server - GPL
+Servers\MySqlLocal\ConnectCount<|||>3<|||>2
+Servers\MySqlLocal\ServerVersion<|||>3<|||>80021
+Servers\MySqlLocal\LastConnect<|||>1<|||>2020-09-14 17:23:25
+Servers\MySqlLocal\lastUsedDB<|||>1<|||>example
+Servers\MySqlLocal\QueryHistory\1<|||>1<|||>2020-09-14 17:24:09|EXAMPLE|0|USE EXAMPLE;<{{{><}}}>
+Servers\MySqlLocal\QueryHistory\2<|||>1<|||>2020-09-14 17:24:31|EXAMPLE|0|USE EXAMPLE;<{{{><}}}>SELECT * FROM tbl;<{{{><}}}>
