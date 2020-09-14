@@ -1,0 +1,40 @@
+#Домашка
+
+HW_01_01
+
+	mysql -u redballtoy -p
+
+	- создание БД
+		create database example;
+		
+	- запросим список всех БД
+		show databases;
+	
+	- выбрать базу
+		use example
+		
+	- файл example_02.sql с инструкциями
+		create table if not exists users(
+			id serial comment 'Первичный ключ таблицы',
+			name varchar(255) comment 'Имя пользователя'
+		)
+		character set utf8mb4 collate utf8mb4_0900_ai_ci;
+		
+	- выполнить файл
+		mysql> source example_02.sql
+		
+	- show tables;
+	- describe users;
+	- show create table users;
+	
+
+- создание дампа таблицы help_keyword базы данных mysql, добиться того что бы дамп содержал
+	только первые 100 строк
+	
+	use mysql
+	describe help_keyword;
+	select * from help_keyword;
+	\q
+	mysqldump -u redballtoy -p mysql help_keyword --skip-opt --where='1 limit 100' > report.sql
+	
+	
