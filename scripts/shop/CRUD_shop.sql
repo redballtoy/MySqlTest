@@ -16,7 +16,9 @@ insert into catalogs values (0,'Видеокарты');
 insert into catalogs 
 values (default, 'Процессоры')
 		,(default, 'Мат. платы')
-		,(default, 'Видеокарты');
+		,(default, 'Видеокарты')
+		,(default, 'Корпуса')
+		,(default, 'Блоки питания');
 		
 
 
