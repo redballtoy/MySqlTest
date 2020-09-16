@@ -247,6 +247,9 @@ select * from customers order by rand();
 #получение одной случайной записи
 select * from customers order by rand() limit 1;
 
+#получение случайного значения
+select rand();
+
 #-------------------VERSION() - возвращает текущую версию sql сервера
 select version() as MySqlServerVersion;
 
@@ -280,5 +283,139 @@ select database() as curentdatabase;
 #----------------------USER() - позволяет вернуть текущего пользователя
 select user() as currentuser;
 
+#---------------------SQRT() - получение корня
+select sqrt(4);
+#вычисление расстояния в декартовой системе координат
+# D=sqrt((x1-x2)^2 + (y1-y2)^2)
+use example;
+
+#drop table distance;
+create table if not exists distance(
+	id serial primary key,
+	x1 int not null,
+	y1 int not null,
+	x2 int not null,
+	y2 int not null,
+	distance double as (sqrt(pow(x1-x2,2)+pow(y1-y2,2)))
+);
+
+insert into distance (x1,y1,x2,y2)
+	values	(1,1,4,5),
+			(4,-1,3,2),
+			(-2,5,1,3);
+			
+select * from distance;
+
+#вариант с использованием json
+create table if not exists distance_json(
+	id serial primary key,
+	a json not null,
+	b json not null,
+	#$ - вершина коллекции, к строковым ключам x и y подключаемся через .
+	distance double as (sqrt(pow(a->>'$.x'-b->>'$.x',2)+pow(a->>'$.y'-b->>'$.y',2)))
+);
+
+insert into distance_json (a,b) 
+values ('{"x":1,"y":1}','{"x":4,"y":5}')
+		,('{"x":4,"y":-1}','{"x":3,"y":2}')
+		,('{"x":-2,"y":5}','{"x":1,"y":3}');
+
+select * from distance_json;
 
 
+#---------------------тригонометрические формулы
+#вычисление площади треугольника
+#S=a*b*sin(angle)/2
+
+create table if not exists triangle_square(
+	id serial primary key,
+	a double not null, #first side
+	b double not null, #secone side
+	angle int not null,	#angel between this sides, grad
+	square double as (a*b*sin(angle)/2)
+);
+
+insert into triangle_square(a,b,angle)
+values 	(1.414,1,45)
+		,(2.707,2.104,60)
+		,(2.088,2.112,56)
+		,(5.014,2.304,23)
+		,(3.482,4.708,38);
+
+select * from triangle_square;
+
+#----------------ROUND() округление до ближайшего целого числа
+select id, a , b, square,round(square,4) as square_round from triangle_square;
+
+#---------------CEILING() всегда отругляет в большую сторону
+select id, a , b, square,ceiling(square) as square_ceiling from triangle_square;
+
+#---------------floor() всегда отругляет в меньшую сторону
+select id, a , b, square,floor(square) as square_floor from triangle_square;
+
+
+#-------------SUBSTRING - извлечение подстроки
+use shop;
+#извлечение первых 4 символов
+#нумерация символов в строках всегда начинается с 1
+select id, substring(name_id,1,4) from customers;
+
+#-------------CONCAT - соединение нескольких строк
+#вывод имени пользователя и его возраста через пробел
+select id,
+concat(name_id,' ', timestampdiff(year, birthday,now())) as name_age
+from customers;
+
+
+#--------------IF логическая операция
+#Пример определение совершеннолетия пользователя
+select id
+,name_id
+,timestampdiff(year, birthday,now()) as age
+,if(timestampdiff(year, birthday,now())>=18 #условие
+	,'совершеннолетний'	#true
+	,'не совершеннолетний'	#false
+	) as status
+from customers;
+
+
+#--------------CASE - в случае когда нужно проверить несколько условий
+
+#пример цвета радуги
+use example;
+drop table if exists rainbow;
+create table if not exists rainbow(
+	id serial primary key
+	,color varchar(255)
+);
+
+insert into rainbow(color)
+values 	('red')
+		,('orange')
+		,('yellow')
+		,('green')
+		,('blue')
+		,('indigo')
+		,('violet');
+
+select color as color_eng
+	,case
+		when color='red' then 'красный'
+		when color='orange' then 'оранЖовый'
+		when color='yellow' then 'жовтый'
+		when color='green' then 'ЗеленоМалахитовый'
+		when color='blue' then 'ГоЛубой'
+		when color='indigo' then 'Индейский'
+		when color='violet' then 'Виолетовый'
+		else 'неизвестный в природе цвет'
+		end as color_rus
+from rainbow;
+
+#----------------------INET_ATON - переводит ip адрес в целое число
+select inet_aton('127.0.0.1');
+
+#---------------------INET_NTOA - решает обратную задачу
+select inet_ntoa(inet_aton('127.0.0.1'));
+
+#--------------------UUID() - возвращает уникальный идентификатор
+select uuid();
