@@ -113,6 +113,24 @@ set created_at_date = (
 #финальный результат
 select * from users;
 
+/*
+РЕШЕНИЕ ПРЕПОДАВАТЕЛЯ
+---------------------------------------------------------------------
+*/
+#преобразовываем значения используя функцию str_to_date
+
+select created_at,
+str_to_date(created_at, '%d.%m.%Y %k:%i')
+from users;
+
+update users
+set created_at_date = str_to_date(created_at, '%d.%m.%Y %k:%i')
+,updated_at_date = str_to_date(updated_at, '%d.%m.%Y %k:%i');
+
+select * from users;
+#------------------------------------------------------------------
+
+
 
 /*
 В таблице складских запасов storehouses_products в поле value могут 
@@ -141,7 +159,8 @@ values (1,2,3)
 
 select warehaus_id,product_id,`value`, if(value=0 ,1,0) as k
 from warehause_lines
-order by k asc ,`value` desc;
+#order by k asc ,`value` desc;
+
 
 /*
 Из таблицы users необходимо извлечь пользователей, родившихся в августе и мае. 
@@ -178,9 +197,9 @@ create table two_month(
 	
 insert into two_month (two_month_name,two_month_name_key)
 values ('may','May')
-,('august','August')
+,('august','August');
 
-select * from two_month
+select * from two_month;
 		
 select name_id, 
 birthday
@@ -213,5 +232,6 @@ values (default, 'Процессоры')
 select * from catalogs
 where id in(5, 1, 2)
 order by field (id,5,1,2);
+
 
 
