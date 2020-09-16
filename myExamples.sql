@@ -158,6 +158,8 @@ order by catalog_id , price desc; #desc относится только к по�
 
 
 #------------------------LIMIT - количество извлекаемых записей
+#должно всегда располагаться в конце
+
 select id, catalog_id, price, name_id
 from products 
 limit 3;
@@ -419,3 +421,121 @@ select inet_ntoa(inet_aton('127.0.0.1'));
 
 #--------------------UUID() - возвращает уникальный идентификатор
 select uuid();
+
+#---------------------GROUP BY - группировка данных
+
+#получение уникальных значений
+select catalog_id
+from products
+group by catalog_id;
+
+#использование вычисляемых значений для группирования
+#например группировка пользователей по десятилениям рождения
+
+select id
+	,name_id
+	,substring(birthday,1,3) as decade
+from customers
+order by decade;
+
+#получение того сколько пользователей в какую декаду родились
+select substring(birthday,1,3) as decade
+,count(1) count_users
+from customers
+group by substring(birthday,1,3)
+order by decade
+limit 3; 
+
+#-----------------------GROUP_CONCAT - соединенеие строк по полю в группе
+#может извлекать из группы максимум 1000 элементов (увеличить можно изменив параметр
+#GROUP_CONCAT  lenght на сервере
+
+select group_concat(name_id) #бля он чувствителен к пробелу group_concat (name_id)
+, substring(birthday,1,3) as decade
+from customers
+group by decade
+order by decade;
+
+#можно задавать разделитель используя слово separator
+select group_concat(name_id separator ' ') 
+, substring(birthday,1,3) as decade
+from customers
+group by decade
+order by decade;
+
+#позволяет сортировать пользователей в рамках полученной строки
+select group_concat(name_id order by name_id desc separator ' ') 
+, substring(birthday,1,3) as decade
+from customers
+group by decade
+order by decade;
+
+#----------------------COUNT - подсчет количества значений отличных от null
+#count(*) считает вместе с null
+#называется агрегационными потому что их поведение изменяется при использовании
+#конструкции group by (подсчет производится внутри группы)
+
+select catalog_id,count(id) 
+from products
+group by catalog_id;
+
+#использование distinct вместе с count
+select count(distinct id) as total_ids,
+	count(distinct catalog_id) as total_catalog_ids
+from products;
+
+#---------------------MIN, MAX - возвращают минимальное и максимальное значение столбца
+#получение максимальной и минимальной цены в рамках разделов каталога
+select 
+	catalog_id
+	,min(price) as minPrice
+	,max(price) as maxPrice
+from products
+group by catalog_id;
+
+#--------------------AVG - возвращает среднее значение
+select 
+	catalog_id
+	,min(price) as minPrice
+	,round(avg(price),2) as avgPrice
+	,max(price) as maxPrice
+from products
+group by catalog_id;
+
+#---------------SUM подсчитывает значения отличные от null
+select 
+	catalog_id
+	,min(price) as minPrice
+	,round(avg(price),2) as avgPrice
+	,max(price) as maxPrice
+	,round(sum(price)/count(1),2) as avgPriceSum
+from products
+group by catalog_id;
+
+#--------------HAVING - использование сортировки для агрегированных значений
+
+select substring(birthday,1,3) as decade
+,count(1) count_users
+from customers
+group by substring(birthday,1,3)
+having count_users>1
+order by decade;
+
+#допускается использование having без группировки group by
+#в этом случае каждая строка таблицы рассматривается как отдельная группа
+select *
+from customers
+having birthday >='1990-01-01';
+
+
+#---------------------WITH ROLLUP добавление итога
+select substring(birthday,1,3) as decade
+,count(1) count_users
+from customers
+group by substring(birthday,1,3)
+with rollup;
+
+
+
+
+
