@@ -9,8 +9,8 @@ use shop;
 drop table if exists catalogs;
 create table catalogs(
 	id serial primary key
-	,name_id varchar(255) #Название раздела
-	,unique unique_name_catalogs(name_id(10)) #запрещает вставлять повторяющиеся значения
+	,`name` varchar(255) #Название раздела
+	,unique unique_namecatalogs(`name`(10)) #запрещает вставлять повторяющиеся значения
 );
 
 insert into catalogs 
@@ -28,13 +28,36 @@ values (default, 'Процессоры')
 drop table if exists customers;
 create table customers(
 	id serial primary key
-	,name_id varchar(255) #Имя покупателя
-	,birthday date #День рождения покупателя
+	,`name` varchar(255) #Имя покупателя
+	,birthday_at date #День рождения покупателя
 	,created_at datetime default current_timestamp#Дата создания записи (регистрация покупателя)
 	,updated_at datetime default current_timestamp on update current_timestamp
 );
 
-insert into customers (name_id, birthday)
+insert into customers (`name`, birthday_at)
+values	('Геннадий','1990-10-05')
+		,('Наталья','1984-11-12')
+		,('Александр','1985-05-20')
+		,('Сергей','1988-02-14')
+		,('Иван','1998-01-12')
+		,('Дмитрий','1972-03-29')
+		,('Мария','2006-08-29');
+
+
+#select * from customers;
+
+
+#создание таблицы юзеров
+drop table if exists users;
+create table users(
+	id serial primary key
+	,`name` varchar(255) #Имя юзера
+	,birthday_at date #День рождения юзера
+	,created_at datetime default current_timestamp#Дата создания записи (регистрация покупателя)
+	,updated_at datetime default current_timestamp on update current_timestamp
+);
+
+insert into users (`name`, birthday_at)
 values	('Геннадий','1990-10-05')
 		,('Наталья','1984-11-12')
 		,('Александр','1985-05-20')
@@ -49,11 +72,12 @@ values	('Геннадий','1990-10-05')
 
 
 
+
 #таблица с товарными позициями
 drop table if exists products;
 create table products(
 	id serial primary key
-	,name_id varchar(255) #Название товара
+	,`name` varchar(255) #Название товара
 	,description text #Описание
 	,price decimal (11,2) #цена товара
 	,catalog_id int unsigned
@@ -63,7 +87,7 @@ create table products(
 );
 
 INSERT INTO products
-  (name_id, description, price, catalog_id)
+  (`name`, description, price, catalog_id)
 VALUES
   ('Intel Core i3-8100', 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', 7890.00, 1),
   ('Intel Core i5-7400', 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', 12700.00, 1),
@@ -88,10 +112,10 @@ VALUES
 drop table if exists orders;
 create table  orders(
 	id serial primary key
-	,customer_id int unsigned
+	,user_id int unsigned
 	,created_at datetime default current_timestamp #Дата создания записи 
 	,updated_at datetime default current_timestamp on update current_timestamp
-	,key index_of_customer_id using btree (customer_id)
+	,key index_of_user_id using btree (user_id)
 );
 
 
@@ -122,7 +146,7 @@ create table   orders_lines(
 drop table if exists discounts;
 create table   discounts(
 	id serial primary key
-	,customer_id int unsigned
+	,user_id int unsigned
 	,product_id int unsigned
 	,discount float unsigned #Велична скидки от 0.0 до 1.0
 	# если оба поля null скидка бессрочная, если stop_at = null значит у интервала
@@ -132,7 +156,7 @@ create table   discounts(
 	,created_at datetime default current_timestamp #Дата создания записи 
 	,updated_at datetime default current_timestamp on update current_timestamp
 	#эти поля для поиска будут использоваться раздельно поэтому два индекса
-	,key index_of_customer_id (customer_id)
+	,key index_of_user_id (user_id)
 	,key index_of_product_id (product_id)
 );
 #describe discounts;
@@ -143,7 +167,7 @@ create table   discounts(
 drop table if exists warehauses;
 create table   warehauses(
 	id serial primary key
-	,name_id varchar(255) #Наименование склада
+	,`name` varchar(255) #Наименование склада
 	,created_at datetime default current_timestamp #Дата создания записи 
 	,updated_at datetime default current_timestamp on update current_timestamp
 );
@@ -166,15 +190,21 @@ create table   warehause_lines(
 drop table if exists cat;
 create table cat(
 	id serial primary key
-	,name_id varchar(255) #Название раздела
-	#,unique unique_name_catalogs(name_id(10)) #запрещает вставлять повторяющиеся значения
+	,`name` varchar(255) #Название раздела
+	#,unique unique_namecatalogs(`name`(10)) #запрещает вставлять повторяющиеся значения
 );
 
 #тестовая таблица cat совпадающая с catalog для insert select
 drop table if exists cat_2;
 create table cat_2(
 	id serial primary key
-	,name_id varchar(255) #Название подраздела раздела
+	,`name` varchar(255) #Название подраздела раздела
 	,id_cat bigint
-	#,unique unique_name_catalogs(name_id(10)) #запрещает вставлять повторяющиеся значения
+	#,unique unique_namecatalogs(`name`(10)) #запрещает вставлять повторяющиеся значения
 );
+
+#исправим тип внешнего ключа у catalog_id таблицы products
+alter table products
+change catalog_id 
+catalog_id bigint unsigned default null;
+
