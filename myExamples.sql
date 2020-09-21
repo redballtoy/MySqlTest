@@ -855,3 +855,69 @@ foreign key (catalog_id)
 references catalogs (id)
 on delete set null
 on update set null;
+
+delete from catalogs
+where name = 'Мат. платы';
+
+select * from catalogs;
+select * from products;
+
+
+#-------------Transactions - транзакции как инструмент поддержания целостности данных
+# транзакция это атомарная группа запросов SQL рассматриваемая как единое целое
+
+/*
+моделирование операции оплаты клиентом покупки в интернет магазине
+	- проверяется наличие на счете клиента 2000 руб
+	- уменьшается сумма акаунта клиента на 2000 руб
+	- увеличивается сумма аккаунта магазина на 2000 руб
+все должно проходить в виде транзакции что бы все выполнилось или ничего.
+*/
+
+#создание таблицы аккаунта пользователя
+drop table if exists user_account;
+create table user_account(
+	id serial primary key
+	,user_id int #внешний ключ id пользователя
+	,total decimal (11,2) #сумма на счету пользователя
+	,created_at datetime default current_timestamp
+	,updated_at datetime default current_timestamp on update current_timestamp
+);
+
+#заполняем таблицу
+insert into user_account(user_id, total)
+values(4,5000)
+	,(3,0)
+	,(2,200)
+	,(null,2500);
+	
+	
+#моделирование операции оплаты клиентом через транзакцию
+start transaction;
+
+#убеждаемся что у пользователя достаточно средств (4000 руб)
+select total 
+from user_account
+where user_id=4;
+
+#снимаем средства со счета пользователя
+update user_account
+set total = total-1000
+where user_id=4;
+
+#перемещаем их на счет интернет магазина (номер счета null)
+update user_account
+set total = total+1000
+where user_id=null;
+
+#выписка движения по счетам
+select * from user_account;
+
+#в настоящий момент изменения в рамках транзакции не сохранены в таблице
+#другие пользователи в данный момент видят исходное состояние таблицы
+#для того что бы изменения вступили в силу необходимо выполнить комманду COMMIT
+commit;
+
+#для отмены транзакции в момент выполнения надо воспользоваться ROLLBACK
+rollback;
+
