@@ -1231,5 +1231,39 @@ drop view if exists v1;
 select * from v1;
 
 
+#---------------------Учетные записи
+#создание пользователя
+create user foo;
+select user();
 
+#получение списка пользователей
+select Host, User from mysql.user;
+
+#переименование пользователя
+rename user foo to fofo;
+
+#удаление пользователя
+drop user foo;
+
+#использование хоста с % обозначает возможность обращаться пользователю с любого
+#компьютера сети username@%
+
+#наделение привилегиями GRANT
+#создание пользователя foo c паролем pass
+grant all on *.* to 'foo'@'localhost'
+identified with sha256_password by 'pass';
+
+#удаление привилегий пользователей REVOKE
+
+
+#----------CREATE PROCEDURE ---------CREATE FUNCTIONS
+#функции в отличие от процедур возвращают значение и их можно встраивать в sql запрос
+
+#процедура которая выводит текущую версию сервера
+create procedure mysqlversion()
+begin
+	select version();
+end;
+
+select version();
 

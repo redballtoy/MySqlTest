@@ -208,3 +208,7 @@ alter table products
 change catalog_id 
 catalog_id bigint unsigned default null;
 
+
+
+
+
