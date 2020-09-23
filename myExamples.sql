@@ -1260,10 +1260,217 @@ identified with sha256_password by 'pass';
 #функции в отличие от процедур возвращают значение и их можно встраивать в sql запрос
 
 #процедура которая выводит текущую версию сервера
-create procedure mysqlversion()
+drop procedure if exists example.ver;
+delimiter //
+create procedure example.ver()
 begin
 	select version();
-end;
+end//
+delimiter ;
 
-select version();
+call example.ver();
+
+
+#просмотр статуса локальной процедуры
+use example;
+show procedure status like 'hell%';
+
+#просмотрт всех локальных процедур 
+show procedure status;
+#просмотр моих процедур
+show procedure status where definer like  'redballtoy%';
+#просмотр всех функций
+show function status;
+#просмотр моих функций
+show function status where definer like  'redballtoy%';
+
+#при наличии прав доступа можно посмотреть в системной таблице proc
+use mysql;
+select name, type from mysql.proc limit 10;#нет такой таблицы
+
+#просмотр созданной процедуры
+use example;
+show create procedure hello;
+
+#удаление процедур и функций
+drop procedure if exists hello;
+drop function if exists func_name;
+
+
+#создание функции
+drop function if exists get_version;
+delimiter //
+create function get_version()
+returns varchar(255) deterministic #будет возвращаться одно и тоже значение которое можно закешировать
+begin
+	return version();
+end//
+delimiter ;
+
+select get_version();
+
+/*передача параметров в процедуру 
+	IN - данные передаются внутрь хранимой процедуры (значение переданного аргумента не сохраняется)
+	OUT - данные передаются строго из хранимой процедуры
+	INOUT - данные передаются как внутрь хранимой процедуры так и наружу
+	
+	для функции параметры имеют всегда атрибут IN
+*/
+
+#создание простейшей процедуры
+drop procedure if exists set_x;
+delimiter //
+create procedure set_x (in value int)
+begin
+	set @x = value;
+	select @x as x;
+end//
+delimiter ;
+
+call set_x(123456);
+
+#изменение процедуры на OUT для изменения внешней переменной
+drop procedure if exists set_x;
+delimiter //
+create procedure set_x (out value int)
+begin
+	set @x = value;
+	set value = 1000;
+end//
+delimiter ;
+
+set @y=10000;
+call set_x(@y);
+select @x,@y;
+
+#использование параметра INOUT позволяет менять входящий параметр в процедуре
+#и как глобальную переменную
+drop procedure if exists set_x;
+delimiter //
+create procedure set_x (inout value int)
+begin
+	set @x = value;
+	set value = 1000;
+end//
+delimiter ;
+
+set @y=10000;
+call set_x(@y);
+select @x,@y;
+
+#объявление переменной в процедуре
+#declare может находиться только в блоке begin ... end
+
+drop procedure if exists declare_var;
+delimiter //
+create procedure declare_var()
+begin
+	declare id, num int(11) default 0; #можно объявить несколько переменных одного типа
+	declare name, hello, temp tinytext;
+end//
+delimiter ;
+
+#область видимости - внешняя переменная видна для внутренней но не наоборот
+drop procedure if exists declare_var_2;
+delimiter //
+create procedure declare_var_2()
+begin
+	declare var_out tinytext default 'внешняя переменная';
+	begin
+		declare var_in tinytext default 'внутренняя переменная';
+		select var_in,var_out;
+	end;
+	#select var_in,var_out;
+end//
+delimiter ;
+
+call declare_var_2();
+
+#инициализация переменных SET и SELECT ...INTO ... FROM
+set @var = 100;
+set @var=@var+1;
+select @var;
+
+select name, description 
+into @x,@y
+from products where name = 'Intel Core i3-8100';
+select @y, @x;
+
+#пример создания функции принимающей количество секунд и возвращает строку
+#в которой указывается сколько дней часов и т.д. входит в этот интервал
+drop function if exists second_format;
+delimiter //
+create function second_format(seconds int)
+returns varchar(255) deterministic
+begin
+	#объявляем дни, часы и минуты
+	declare days, hours, minutes int;
+	#вычисляем значения и присваиваем их командой set
+	set days = floor(seconds/(24*60*60));
+	set seconds = seconds-days*(24*60*60);
+	set hours = floor(seconds/(60*60));
+	set seconds = seconds-hours*(60*60);
+	set minutes = floor(seconds/60);
+	set seconds = seconds-minutes*60;
+	return concat(days,' days, ',
+					hours,' hours, ',
+					minutes,' minutes, ',
+					seconds,' seconds.'
+				);
+end//
+delimiter ;
+select second_format(100000);
+
+#использование OUT
+use shop;
+delimiter //
+create procedure numcatalogs (out total int)
+begin
+	select count(*) into total from catalogs;
+end//
+delimiter ;
+
+call numcatalogs(@a);
+select @a;
+
+#----------------IF ветвление программ по условию
+drop procedure if exists format_now;
+delimiter //
+create procedure format_now (format char(4))
+begin
+	if(format='date')then
+		select date_format(now(),'%d.%m.%Y') as date_;
+	else
+		select date_format(now(),'%H.%i.%s') as time_;
+	end if;
+end//
+delimiter ;
+
+call format_now('date');
+call format_now('time');
+
+#---------------CASE - множественный выбор
+
+drop procedure if exists format_now_case;
+delimiter //
+create procedure format_now_case (format char(4))
+begin
+	case format
+		when 'date' then select date_format(now(),'%d.%m.%Y') as date_;
+		when 'time' then select date_format(now(),'%H.%i.%s') as time_;
+		when 'secs' then select unix_timestamp(now()) as secs_unix;
+		else
+			select 'Ошибка в параметре format';
+		end case;
+end//
+delimiter ;
+
+call format_now_case('date');
+call format_now_case('time');
+call format_now_case('secs');
+call format_now_case('four');
+
+#-----------------WHILE, REPEAT, LOOP - циклы и курсоры
+
+
 

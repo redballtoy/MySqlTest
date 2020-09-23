@@ -72,33 +72,32 @@ select * from prod_catalog_name;
 в исходном таблице и 0, если она отсутствует.
 */
 
-/* с циклом while не удалось запустить сохдание таблицы август
-придется делать в лоб
-set @startDate = '2018-08-01';
-drop table august;
+#-----------Новое решение
+drop table if exists august;
 create table august (date_ date);
-while month(@startDate)=8 begin
-	insert into august values (@startDate);
-	set @startDate=date_add(@startDate, interval 1 day);
-end;
-
-select * from august;
-select @startDate
-select month(@startDate)
-select date_add(@startDate, interval 1 day);
-
-
 drop procedure if exists august_calendar;
-DELIMITER //
-create procedure august_calendar (startDate int)
+delimiter //
+create procedure august_calendar (startDate date)
 begin
-	set startDate=1;
-	select startDate;
-end//
-DELIMITER ;
+	declare month_, month_2 int;
+	set month_ = month(startDate);
+	set month_2=month_;
 
-execute procedure august_calendar(10);
-*/
+	while month_=month_2 do
+	insert into august values(startDate);
+	set startDate = date_add(startDate,interval 1 day);
+	set month_2 = month(startDate);
+	#select * from august;
+	end while;
+
+end//
+delimiter ;
+
+call august_calendar ('2018-08-01');
+select * from august;
+
+#--------------------------------------------------------------------
+
 
 drop table if exists full_august;
 create table full_august (created_at date);
