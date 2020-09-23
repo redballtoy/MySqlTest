@@ -1471,6 +1471,25 @@ call format_now_case('secs');
 call format_now_case('four');
 
 #-----------------WHILE, REPEAT, LOOP - циклы и курсоры
+#могут использоваться между begin ... end
+
+#Пример на while
+drop procedure if exists now3;
+delimiter //
+create procedure now3()
+begin
+	declare i int default 3;
+	while i>0 do
+		select now();
+		set i=i-1;
+	end while;
+end//
+delimiter ;
+
+call now3();
+
+
+
 
 
 

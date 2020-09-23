@@ -73,8 +73,8 @@ select * from prod_catalog_name;
 */
 
 #-----------Новое решение
-drop table if exists august;
-create table august (date_ date);
+drop table if exists full_august;
+create table full_august (date_ date);
 drop procedure if exists august_calendar;
 delimiter //
 create procedure august_calendar (startDate date)
@@ -84,7 +84,7 @@ begin
 	set month_2=month_;
 
 	while month_=month_2 do
-	insert into august values(startDate);
+	insert into full_august values(startDate);
 	set startDate = date_add(startDate,interval 1 day);
 	set month_2 = month(startDate);
 	#select * from august;
@@ -94,7 +94,7 @@ end//
 delimiter ;
 
 call august_calendar ('2018-08-01');
-select * from august;
+select * from full_august;
 
 #--------------------------------------------------------------------
 
