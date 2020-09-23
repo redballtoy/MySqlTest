@@ -1476,20 +1476,299 @@ call format_now_case('four');
 #Пример на while
 drop procedure if exists now3;
 delimiter //
-create procedure now3()
+create procedure now3(in num int)
 begin
-	declare i int default 3;
-	while i>0 do
-		select now();
-		set i=i-1;
-	end while;
+	declare i int default 1;
+	if(num>0) then
+		while i<= num do
+		select i, now();
+		set i=i+1;
+		end while;
+	else
+		select 'Ошибочное значение параметра';
+	end if;
 end//
 delimiter ;
 
-call now3();
+call now3(3);
+
+#выполнение по условию LEAVE и использование метки цикла из которого 
+#происходит выход
+drop procedure if exists now4;
+delimiter //
+create procedure now4(in num int)
+begin
+	declare i int default 1;
+	if(num>0) then
+		cycle: while i<= num do
+				if i>2 then leave cycle;#ограничение двумя значениями
+				end if;
+				select i, now();
+				set i=i+1;
+		end while cycle;
+	else
+		select 'Ошибочное значение параметра';
+	end if;
+end//
+delimiter ;
+
+call now4(3);
+
+#ITERATE - досрочное прекращение текущей процедурыc - не работает
+drop procedure if exists now5;
+delimiter //
+create procedure now5(in num int)
+begin
+	declare i int default 1;
+	if(num>0) then
+		cycle: while i<= num do
+				if i>2 then iterate cycle;#ограничение двумя значениями
+				end if;
+				select i, now();
+				set i=i+1;
+		end while cycle;
+	else
+		select 'Ошибочное значение параметра';
+	end if;
+end//
+delimiter ;
+
+call now5(3);
+
+#-----REPEAT - выполняет цикл хотя бы один раз
+drop procedure if exists now6;
+delimiter //
+create procedure now6()
+begin
+	declare i int default 3;
+	repeat
+		select i, now();
+		set i=i-1;
+		until i<=0
+	end repeat;
+end//
+delimiter ;
+
+call now6();
+
+#--------LOOP - не имеет условий выхода поэтому обязательно должен содержать LEAVE
+drop procedure if exists now7;
+delimiter //
+create procedure now7()
+begin
+	declare i int default 3;
+	cycle: loop
+		select i, now();
+		set i=i-1;
+		if i<=0 then leave cycle;
+		end if;
+	end loop cycle;
+end//
+delimiter ;
+
+call now7();
+
+#------------Обработчики ошибок!
+
+#пример обработки вставки дублирующего значения
+select * from catalogs;
+drop procedure if exists insert_to_catalog;
+delimiter //
+create procedure insert_to_catalog(in id int, in name varchar(255))
+begin
+	declare continue handler for sqlstate '23000'
+		set @error = 'Ошибка вставки данных';
+	insert into catalogs values (id, name);
+	if @error is not null 
+		then select @error;
+	end if;
+end//
+delimiter ;
+
+call insert_to_catalog(6, 'Оперативная память');
 
 
+/*CURSOR - предназначен для обхода результирующих таблиц потому что не работает 
+	несколькими записями сразу
+	Работа с курсором производится в следующие стадии:
+		DECLARE CURSOR - DECLARE curcat CURSOR FOR SELECT * FROM catalogs;
+		OPEN - OPEN curcat; выполнение запроса и установка курсора на первой записи таблицы
+		FETCH - FETCH curcat INTO id, name; перемещает курсор на следующую записть и извлекает данные
+		CLOSE - CLOSE curcat;
+*/
+
+#пример создания копии таблицы catalogs c приведением названий к верхнему 
+#регистру
+
+drop table if exists upcase_catalogs;
+create table upcase_catalogs(
+	id serial primary key
+	,name varchar(255)
+	);
 
 
+drop procedure if exists copy_catalogs1;
+delimiter //
+create procedure copy_catalogs1()
+begin
+	declare id int;
+	declare is_end int default 0;
+	declare name tinytext;
+	
+	declare curcat cursor for select * from catalogs;
+	declare continue handler for not found set is_end=1;
+	
+	open curcat;
+	
+		cycle:loop
+			fetch curcat into id, name;
+			if is_end then leave cycle;
+			end if;
+			insert into upcase_catalogs values(id, upper(name));
+		end loop cycle;
+	close curcat;
+end//
+delimiter ;
+
+select * from upcase_catalogs;
+call copy_catalogs1();
 
 
+/*
+--------TRIGGERS - это специальная процедура привязанная к изменению состояния таблицы
+	BEFORE INSERT - INSERT - AFTER INSERT
+	BEFORE UPDATE - UPDATE - AFTER UPDATE
+	BEFORE DELETE - DELETE - AFTER DELETE
+*/
+
+#для создания триггера используется команда create trigger
+drop trigger if exists catalogs_count;
+delimiter //
+create trigger catalogs_count after insert on catalogs
+	for each row
+		begin
+			select count(*) into @total from catalogs;
+		end//
+delimiter //
+
+insert into catalogs values (null, 'Мониторы');
+select * from catalogs;
+select @total;
+
+#посмотреть список триггеров
+show triggers;
+
+#удаление триггеров
+drop trigger catalogs_count;
+
+#-----------NEW и OLD - доступ к старым и новым записям
+
+#пример триггера вставляющего минимальный id каталога для продукта при вставке которого
+#catalog_id равен null, или если не равен то новый catalog_id
+drop trigger if exists check_catalog_id_insert;
+delimiter //
+create trigger check_catalog_id_insert before insert on products
+for each row
+begin
+	declare cat_id int;
+	select id into cat_id from catalogs order by id limit 1;
+	set new.catalog_id=coalesce(new.catalog_id,cat_id);
+end//
+delimiter //
+
+insert into products (name, description, price)
+	values('AMD RYZEN 5 1600', 'Процессор AMD', 13200.00);
+	
+select * from products;
+
+#пример триггера оставляющий без изменения id каталога для продукта при обновлении
+#которого #catalog_id равен null, или если не равен то новое значение
+drop trigger if exists check_catalog_id_update;
+delimiter //
+create trigger check_catalog_id_update before update on products
+for each row
+begin
+	declare cat_id int;
+	select id into cat_id from catalogs order by id limit 1;
+	set new.catalog_id=coalesce(new.catalog_id, old.catalog_id, cat_id);
+end//
+delimiter //
+
+update products 
+set catalog_id = 3 where name = 'AMD RYZEN 5 1600';
+
+#использование триггеров для присвоения вычисляемого значения
+drop table if exists prices;
+create table prices(
+	id serial primary key
+	,processor decimal(11,2) #цена процесора
+	,mother decimal(11,2) #цена матери
+	,memory decimal(11,2) #цена памяти
+	,total decimal(11,2) #стоимость комплекта
+	);
+
+#расчет total с использованием триггера
+drop trigger if exists auto_calculate_total_on_insert;
+delimiter //
+create trigger auto_calculate_total_on_insert before insert on prices
+for each row
+begin	
+	set new.total = new.processor + new.mother + new.memory;
+end//
+delimiter //
+
+drop trigger if exists auto_calculate_total_on_update;
+delimiter //
+create trigger auto_calculate_total_on_update before update on prices
+for each row
+begin	
+	set new.total = new.processor + new.mother + new.memory;
+end//
+delimiter //
+
+select * from prices;
+
+insert into prices (processor, mother, memory)
+values(7890.00, 5060.00, 4800.00);
+
+update prices
+set memory = 5300.00
+where id=1;
+
+#использование STORED  столбцов для автоматического расчета
+drop table if exists prices;
+create table prices(
+	id serial primary key
+	,processor decimal(11,2) #цена процесора
+	,mother decimal(11,2) #цена матери
+	,memory decimal(11,2) #цена памяти
+	,total decimal(11,2) as (processor + mother + memory) stored #стоимость комплекта
+	);
+
+drop trigger if exists auto_calculate_total_on_update;
+drop trigger if exists auto_calculate_total_on_insert;
+
+insert into prices (processor, mother, memory)
+values(7890.00, 5060.00, 4800.00);
+
+select * from prices;
+
+#использование триггеров для предотвращения операций
+
+#предотвращение удаления последней записи
+drop trigger if exists check_last_catalogs;
+delimiter //
+create trigger check_last_catalogs before delete on catalogs
+for each row
+begin
+	declare total int;
+	select count(*) into total from catalogs;
+	if total <=1 then 
+		signal sqlstate '45000' set message_text='DELETE canceled';
+	end if;
+end//
+delimiter //
+
+#последовательно удаляем записи
+delete from catalogs limit 1;
+select * from catalogs;

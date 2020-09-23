@@ -31,6 +31,26 @@ delimiter ;
 
 call example.hello();
 
+#--------------------Решение преподавателя
+#создаем функцию для получения текущего часа:
+drop function if exists get_hour;
+delimiter //
+create function get_hour()
+returns int deterministic #не работает с not deterministic
+begin
+	return hour(now());
+end//
+delimiter ;
+
+#создаем конечную функцию
+drop function if exists hello;
+delimiter //
+create function hello()
+returns tinytext 
+
+
+
+
 
 /*
 2. В таблице products есть два текстовых поля: name с названием товара и description с 
@@ -66,8 +86,50 @@ VALUES
 
 select * from products;
 
-#одно из полей или оба должны быть заполнены.
+#оба вставляемых поля не должны быть не null.
+drop trigger if exists check_not_null_products_name_on_insert;
+delimiter //
+create trigger check_not_null_products_name_on_insert before insert on products
+for each row
+begin
+	if(new.name is null and new.description is null) then
+		signal sqlstate '45000' set message_text='INSERT canceled';
+	end if;
+end//
+delimiter //	
 
+#проверка
+insert into products (name, description, price, catalog_id)
+values('name_1',null,1000,1);
+insert into products (name, description, price, catalog_id)
+values(null,'description 2',1000,1);
+insert into products (name, description, price, catalog_id)
+values(null,null,1000,1);
+
+
+
+#если при обновлении оба null то отменить
+drop trigger if exists check_not_null_products_name_on_update;
+delimiter //
+create trigger check_not_null_products_name_on_update before update on products
+for each row
+begin
+	if(new.name is null and new.description is null) then
+		signal sqlstate '45000' set message_text='UPDATE canceled';
+	end if;
+end//
+delimiter //	
+
+#проверка добавляем обновление до двух нулевых
+update products
+set name = null
+where id = 9;
+
+update products
+set description = null
+where id = 10;
+
+select * from products;
 
 
 
