@@ -421,6 +421,36 @@ select id
 from customers;
 
 
+#пример с использованием else if
+drop function if exists hello;
+
+DELIMITER //
+
+create function hello()
+returns varchar(15) deterministic
+begin
+	declare greeting varchar(15);
+    declare hour int;
+    
+    select hour(now()) into hour;
+    
+	if hour between 6 and 11
+			then set greeting = 'Доброе утро';
+	elseif hour between 12 and 17
+			then set greeting = 'Добрый день';
+	elseif hour between 18 and 23
+			then set greeting = 'Добрый вечер';
+	elseif hour between 0 and 5
+			then set greeting = 'Доброй ночи';
+	end if;
+    
+	return greeting;
+end; //
+
+DELIMITER ;
+
+
+
 #--------------CASE - в случае когда нужно проверить несколько условий
 
 #пример цвета радуги
@@ -851,7 +881,7 @@ catalog_id bigint unsigned default null;
 
 show create table products;
 
-#удаление ограничения из таблицы
+#удаление ограничения из таблиц
 alter table products
 drop foreign key `products_ibfk_1`;
 
@@ -1256,7 +1286,7 @@ identified with sha256_password by 'pass';
 #удаление привилегий пользователей REVOKE
 
 
-#----------CREATE PROCEDURE ---------CREATE FUNCTIONS
+#----------CREATE PROCEDURE ---------CREATE FUNCTION --PROCEDURE --FUNCTION
 #функции в отличие от процедур возвращают значение и их можно встраивать в sql запрос
 
 #процедура которая выводит текущую версию сервера
@@ -1420,6 +1450,65 @@ begin
 end//
 delimiter ;
 select second_format(100000);
+
+#пример реализации функции с условиями
+DELIMITER //
+DROP FUNCTION IF EXISTS hello//
+CREATE FUNCTION hello()
+RETURNS TEXT DETERMINISTIC
+BEGIN
+	DECLARE now_time TIME;
+	SET now_time = CURTIME();
+	
+	IF ((now_time > '06:00:00') AND (now_time < '12:00:00')) THEN
+		RETURN 'Доброе утро!';
+	ELSEIF ((now_time > '12:00:00') AND (now_time < '18:00:00')) THEN
+		RETURN 'Добрый день!';
+	ELSEIF ((now_time > '18:00:00') AND (now_time < '24:00:00')) THEN
+		RETURN 'Добрый вечер!';
+	ELSEIF ((now_time > '00:00:00') AND (now_time < '06:00:00')) THEN
+		RETURN 'Доброй ночи!';
+	ELSE RETURN 'Неудалось определить время';
+	END IF;
+
+END//
+
+SELECT hello()//
+DELIMITER ;
+
+/*
+3. (по желанию) Напишите хранимую функцию для вычисления произвольного числа Фибоначчи.
+	Числами Фибоначчи называется последовательность в которой число равно сумме двух предыдущих чисел.
+    Вызов функции FIBONACCI(10) должен возвращать число 55.
+*/
+
+drop function if exists fib;
+
+delimiter //
+
+create function fib(n int)
+returns int deterministic
+begin
+	declare prev int default 0;
+    declare next int default 1;
+    declare tmp int;
+    declare i int default 1;
+    
+    case n
+		when 0 then return prev;
+        when 1 then return next;
+        else
+			while i < n do
+				set tmp = prev + next;
+                set prev = next;
+                set next = tmp;
+                set i = i + 1;
+            end while;
+            return next;
+	end case;
+end//
+
+delimiter ;
 
 #использование OUT
 use shop;
